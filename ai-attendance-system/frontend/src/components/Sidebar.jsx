@@ -53,10 +53,10 @@ export default function Sidebar() {
     const roleColor = { super_admin: '#3b82f6', dept_admin: '#10b981', teacher: '#8b5cf6' }[role] || '#3b82f6';
 
     return (
-        <aside className="sidebar">
-            {}
+        <aside className="sidebar" role="complementary" aria-label="Application sidebar">
+            {/* Logo */}
             <div className="sidebar-logo">
-                <div className="sidebar-logo-icon">
+                <div className="sidebar-logo-icon" aria-hidden="true">
                     <BrainCircuit size={22} color="white" />
                 </div>
                 <div>
@@ -69,25 +69,31 @@ export default function Sidebar() {
                 </div>
             </div>
 
-            {}
-            <nav className="sidebar-nav">
+            {/* Nav */}
+            <nav className="sidebar-nav" role="navigation" aria-label="Main Navigation">
                 {menus.map((item, idx) => {
                     if (item.section) {
-                        return <div key={idx} className="sidebar-section-label">{item.section}</div>;
+                        return <div key={idx} className="sidebar-section-label" role="presentation">{item.section}</div>;
                     }
                     const Icon = item.icon;
                     const active = location.pathname === item.to;
                     return (
-                        <NavLink key={item.to} to={item.to} className={`nav-item${active ? ' active' : ''}`}>
-                            <Icon size={17} className="nav-icon" />
+                        <NavLink
+                            key={item.to}
+                            to={item.to}
+                            className={`nav-item${active ? ' active' : ''}`}
+                            aria-current={active ? 'page' : undefined}
+                            aria-label={item.label}
+                        >
+                            <Icon size={17} className="nav-icon" aria-hidden="true" />
                             <span style={{ flex: 1 }}>{item.label}</span>
-                            {active && <ChevronRight size={13} style={{ opacity: 0.5 }} />}
+                            {active && <ChevronRight size={13} style={{ opacity: 0.5 }} aria-hidden="true" />}
                         </NavLink>
                     );
                 })}
             </nav>
 
-            {}
+            {/* User footer */}
             <div className="sidebar-footer">
                 <div style={{
                     display: 'flex', alignItems: 'center', gap: '0.75rem',
@@ -101,7 +107,7 @@ export default function Sidebar() {
                         border: `1px solid ${roleColor}50`,
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         color: roleColor, fontWeight: 700, fontSize: '0.875rem', flexShrink: 0,
-                    }}>
+                    }} aria-hidden="true">
                         {user?.name?.charAt(0)?.toUpperCase() || '?'}
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
@@ -123,8 +129,9 @@ export default function Sidebar() {
                     className="nav-item"
                     style={{ width: '100%', color: 'var(--neon-rose)' }}
                     onClick={() => { logout(); navigate('/login'); }}
+                    aria-label="Sign out of account"
                 >
-                    <LogOut size={17} />
+                    <LogOut size={17} aria-hidden="true" />
                     Sign Out
                 </button>
             </div>

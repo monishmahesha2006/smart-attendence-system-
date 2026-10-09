@@ -22,7 +22,9 @@ import TeacherManagement from './pages/TeacherManagement';
 const Shell = ({ children }) => (
     <div className="app-layout">
         <Sidebar />
-        <div className="main-content">{children}</div>
+        <main id="main-content" tabIndex="-1" role="main" className="main-content" aria-label="Main dashboard content">
+            {children}
+        </main>
     </div>
 );
 

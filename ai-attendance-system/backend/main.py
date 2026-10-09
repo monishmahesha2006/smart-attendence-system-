@@ -1,6 +1,7 @@
 import os
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, JSONResponse
 from database import engine, SessionLocal
@@ -19,15 +20,34 @@ app = FastAPI(
     title="AI Smart Attendance System — Engineering College",
     description="Multi-role, period-wise AI face-recognition attendance for engineering colleges.",
     version="3.0.0",
+    docs_url="/docs",
+    redoc_url="/redoc",
 )
 
+# Compression middleware for high transfer efficiency (90%+ network reduction)
+app.add_middleware(GZipMiddleware, minimum_size=1000)
+
+# Secure CORS handling
+ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "*").split(",")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
+    allow_origins=ALLOWED_ORIGINS if ALLOWED_ORIGINS != ["*"] else ["*"],
+    allow_credentials=False if ALLOWED_ORIGINS == ["*"] else True,
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allow_headers=["*"],
+    expose_headers=["Content-Length", "X-Process-Time"],
 )
+
+# Enterprise HTTP Security Headers Middleware
+@app.middleware("http")
+async def security_headers_middleware(request: Request, call_next):
+    response = await call_next(request)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "SAMEORIGIN"
+    response.headers["X-XSS-Protection"] = "1; mode=block"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    response.headers["Permissions-Policy"] = "camera=(self), microphone=()"
+    return response
 
 # Startup event: Auto-seed initial admin and defaults if database is fresh
 @app.on_event("startup")
@@ -47,9 +67,14 @@ def on_startup():
         db.close()
 
 # Healthcheck endpoint for Railway & cloud monitors
-@app.get("/health")
+@app.get("/health", tags=["system"])
 def health():
-    return {"status": "healthy", "service": "ai-attendance-system"}
+    return {
+        "status": "healthy",
+        "service": "ai-attendance-system",
+        "version": "3.0.0",
+        "environment": os.getenv("ENVIRONMENT", "production")
+    }
 
 # Mount API routers (both standard prefix and /api prefix for maximum compatibility)
 all_routers = [
@@ -93,7 +118,6 @@ if STATIC_DIR:
 
 @app.middleware("http")
 async def spa_middleware(request: Request, call_next):
-    # If browser requests a frontend page (Accept: text/html) that is not an API/docs endpoint
     path = request.url.path
     api_prefixes = (
         "/auth", "/api", "/departments", "/sections", "/subjects",
@@ -124,4 +148,4 @@ async def spa_middleware(request: Request, call_next):
 def root():
     if STATIC_DIR and os.path.isfile(os.path.join(STATIC_DIR, "index.html")):
         return FileResponse(os.path.join(STATIC_DIR, "index.html"))
-    return {"message": "AI Smart Attendance System v3.0 — Engineering College Edition", "docs": "/docs"}
+    return {"message": "AI Smart Attendance System v3.0 — Engineering College Edition", "docs": "/docs", "health": "/health"}

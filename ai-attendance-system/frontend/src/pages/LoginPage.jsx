@@ -98,12 +98,16 @@ export default function LoginPage() {
                 {}
                 <div className="glass-card" style={{ overflow: 'hidden' }}>
                     {}
-                    <div style={{ display: 'flex', borderBottom: '1px solid var(--border-dim)' }}>
+                    <div role="tablist" aria-label="Select User Role" style={{ display: 'flex', borderBottom: '1px solid var(--border-dim)' }}>
                         {ROLES.map(r => {
                             const Icon = r.icon;
                             const active = r.key === role;
                             return (
                                 <button key={r.key}
+                                    role="tab"
+                                    aria-selected={active}
+                                    id={`tab-${r.key}`}
+                                    aria-label={`Select ${r.label} role`}
                                     onClick={() => { setRole(r.key); setEmail(''); setPw(''); setError(''); }}
                                     style={{
                                         flex: 1, padding: '1rem 0.5rem',
@@ -113,7 +117,7 @@ export default function LoginPage() {
                                         transition: 'all 0.2s',
                                         display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
                                     }}>
-                                    <Icon size={18} color={active ? r.color : 'var(--text-muted)'} />
+                                    <Icon size={18} color={active ? r.color : 'var(--text-muted)'} aria-hidden="true" />
                                     <span style={{
                                         fontSize: '0.7rem', fontWeight: 700,
                                         letterSpacing: '0.05em', textTransform: 'uppercase',
@@ -125,7 +129,7 @@ export default function LoginPage() {
                     </div>
 
                     {}
-                    <form onSubmit={handleLogin} style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                    <form id="login-form-panel" role="tabpanel" aria-labelledby={`tab-${role}`} onSubmit={handleLogin} style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                         {}
                         <div style={{
                             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -138,6 +142,7 @@ export default function LoginPage() {
                                 {activeRole?.desc}
                             </span>
                             <button type="button"
+                                aria-label="Fill demo credentials"
                                 onClick={() => { setEmail(HINTS[role].email); setPw(HINTS[role].pw); }}
                                 style={{
                                     fontSize: '0.7rem', fontWeight: 700, color: activeRole?.color,
@@ -150,7 +155,7 @@ export default function LoginPage() {
                         </div>
 
                         {error && (
-                            <div style={{
+                            <div role="alert" aria-live="assertive" style={{
                                 background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)',
                                 color: 'var(--neon-rose)', padding: '0.75rem 1rem',
                                 borderRadius: '0.6rem', fontSize: '0.85rem', textAlign: 'center',
@@ -158,28 +163,58 @@ export default function LoginPage() {
                         )}
 
                         <div>
-                            <label className="label">Email Address</label>
-                            <input type="email" required value={email} onChange={e => setEmail(e.target.value)}
-                                placeholder={HINTS[role].email} className="input" />
+                            <label htmlFor="login-email-input" className="label">Email Address</label>
+                            <input
+                                id="login-email-input"
+                                type="email"
+                                name="email"
+                                autoComplete="email"
+                                required
+                                aria-required="true"
+                                value={email}
+                                onChange={e => setEmail(e.target.value)}
+                                placeholder={HINTS[role].email}
+                                className="input"
+                            />
                         </div>
 
                         <div>
-                            <label className="label">Password</label>
+                            <label htmlFor="login-password-input" className="label">Password</label>
                             <div style={{ position: 'relative' }}>
-                                <input type={showPw ? 'text' : 'password'} required value={pw} onChange={e => setPw(e.target.value)}
-                                    placeholder="••••••••" className="input" style={{ paddingRight: '3rem' }} />
-                                <button type="button" onClick={() => setShowPw(v => !v)}
+                                <input
+                                    id="login-password-input"
+                                    type={showPw ? 'text' : 'password'}
+                                    name="password"
+                                    autoComplete="current-password"
+                                    required
+                                    aria-required="true"
+                                    value={pw}
+                                    onChange={e => setPw(e.target.value)}
+                                    placeholder="••••••••"
+                                    className="input"
+                                    style={{ paddingRight: '3rem' }}
+                                />
+                                <button
+                                    type="button"
+                                    aria-label={showPw ? "Hide password" : "Show password"}
+                                    onClick={() => setShowPw(v => !v)}
                                     style={{
                                         position: 'absolute', right: '0.75rem', top: '50%', transform: 'translateY(-50%)',
                                         background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)',
                                     }}>
-                                    {showPw ? <EyeOff size={16} /> : <Eye size={16} />}
+                                    {showPw ? <EyeOff size={16} aria-hidden="true" /> : <Eye size={16} aria-hidden="true" />}
                                 </button>
                             </div>
                         </div>
 
-                        <button type="submit" disabled={loading} className="btn btn-primary" style={{ width: '100%', padding: '0.875rem' }}>
-                            {loading ? <Loader2 size={18} style={{ animation: 'spin 1s linear infinite' }} /> : null}
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="btn btn-primary"
+                            aria-label="Sign In"
+                            style={{ width: '100%', padding: '0.875rem' }}
+                        >
+                            {loading ? <Loader2 size={18} aria-hidden="true" style={{ animation: 'spin 1s linear infinite' }} /> : null}
                             {loading ? 'Authenticating…' : 'Sign In'}
                         </button>
                     </form>

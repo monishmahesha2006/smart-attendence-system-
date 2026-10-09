@@ -1,3 +1,4 @@
+import os
 from datetime import datetime, timedelta
 from typing import Optional
 from jose import JWTError, jwt
@@ -9,35 +10,44 @@ from sqlalchemy.orm import Session
 from database import get_db
 import models, schemas
 
-SECRET_KEY = "college_attendance_supersecret_key"
-ALGORITHM  = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 120
+# Secure token configuration with environment override
+SECRET_KEY = os.getenv("JWT_SECRET_KEY", "c7f9e8a1d4b63e528192a0f7e4c2b9a8174620f5b8d9c1e3a7f0e2b4c6a8d1e3")
+ALGORITHM  = os.getenv("JWT_ALGORITHM", "HS256")
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "120"))
 
 pwd_context   = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 
-def verify_password(plain, hashed): return pwd_context.verify(plain, hashed)
-def get_password_hash(pw):          return pwd_context.hash(pw)
+def verify_password(plain: str, hashed: str) -> bool:
+    if not plain or not hashed:
+        return False
+    return pwd_context.verify(plain, hashed)
 
-def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
+def get_password_hash(pw: str) -> str:
+    return pwd_context.hash(pw)
+
+def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
     to_encode = data.copy()
-    expire = datetime.utcnow() + (expires_delta or timedelta(minutes=15))
+    expire = datetime.utcnow() + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
-                                                                                
 def _decode_token(token: str) -> schemas.TokenData:
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         email: str = payload.get("sub")
-        role:  str = payload.get("role", "super_admin")
+        role: str = payload.get("role", "super_admin")
         if email is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+            raise credentials_exception
         return schemas.TokenData(email=email, role=role)
     except JWTError:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+        raise credentials_exception
 
-                                                                                
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     data = _decode_token(token)
     if data.role in ("super_admin", "dept_admin"):
