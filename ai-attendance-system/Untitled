@@ -1,0 +1,72 @@
+PRIMARY GOAL:
+Convert my existing working project into a publishable research paper with strong methodology and experimental validation.
+
+Follow these instructions strictly:
+
+STEP 1: Analyze the full project
+- Understand the problem statement
+- Identify the domain (ML, DL, CV, NLP, etc.)
+- Identify model architecture
+- Identify dataset used
+- Identify preprocessing techniques
+- Identify training pipeline
+- Identify evaluation metrics
+- Identify deployment or implementation details
+
+STEP 2: Frame Research Components
+Generate:
+1. Clear Problem Statement
+2. Research Objectives
+3. Research Questions
+4. Hypothesis (if applicable)
+5. Proposed Approach
+
+STEP 3: Create Complete Methodology Section
+Structure it in academic format including:
+
+1. System Architecture
+2. Data Collection & Dataset Description
+3. Data Preprocessing
+4. Feature Engineering (if applicable)
+5. Model Architecture / Algorithm
+6. Training Procedure
+7. Hyperparameter Tuning
+8. Evaluation Metrics
+9. Experimental Setup
+10. Baseline Comparisons
+11. Validation Strategy (Cross-validation or Train-Test Split)
+12. Statistical Analysis (if applicable)
+
+STEP 4: Highlight Novelty
+- Identify what makes this project publishable
+- Suggest improvements to increase research strength
+- Suggest comparison models
+- Suggest ablation studies
+
+STEP 5: Suggest Research Paper Structure
+Provide full IEEE-style paper structure:
+- Abstract
+- Introduction
+- Literature Review
+- Proposed Method
+- Experimental Results
+- Discussion
+- Conclusion
+- Future Work
+
+STEP 6: Strengthening for Publication
+- Suggest additional experiments
+- Suggest dataset expansion
+- Suggest performance improvement techniques
+- Suggest journal/conference categories suitable for this project
+
+IMPORTANT:
+- Write in formal academic tone.
+- Avoid generic explanations.
+- Make it publication-ready.
+- Assume I am submitting to IEEE/Springer conference.
+- Provide diagrams description if needed.
+- Do not modify project code unless necessary.
+- Focus only on methodology and research framing.
+
+Now start by analyzing the project in this workspace and generating the complete research methodology.
