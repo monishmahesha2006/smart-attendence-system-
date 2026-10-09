@@ -3,8 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { ShieldCheck, GraduationCap, Building2, Loader2, BrainCircuit, Eye, EyeOff } from 'lucide-react';
-
-const API = 'http://localhost:8000';
+import { API } from '../config/api';
 
 const ROLES = [
     { key: 'super_admin', label: 'Super Admin', icon: ShieldCheck, color: '#3b82f6', desc: 'Full college access' },

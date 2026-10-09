@@ -3,8 +3,7 @@ import Webcam from 'react-webcam';
 import axios from 'axios';
 import { Camera, Power, CheckCircle, BrainCircuit, Users, AlertCircle, Wifi } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-
-const API = 'http://localhost:8000';
+import { API } from '../config/api';
 
 const CONSECUTIVE_FRAMES_REQUIRED = 3;
 

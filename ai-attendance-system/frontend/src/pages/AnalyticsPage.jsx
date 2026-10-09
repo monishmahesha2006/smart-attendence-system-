@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import { RefreshCw, AlertTriangle, TrendingUp, Award } from 'lucide-react';
-
-const API = 'http://localhost:8000';
+import { API } from '../config/api';
 const cfg = () => ({ headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
 
 const RISK_COLORS = {

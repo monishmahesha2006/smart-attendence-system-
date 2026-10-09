@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, Search, Download, CheckCircle, XCircle, RefreshCw, PenSquare } from 'lucide-react';
-
-const API = 'http://localhost:8000';
+import { API } from '../config/api';
 const STATUS_OPTS = ['Present', 'Absent', 'Manual'];
 
 export default function PeriodAttendancePage() {

@@ -5,8 +5,7 @@ import {
     Users, Building2, CalendarCheck, Camera, AlertTriangle,
     GraduationCap, BrainCircuit, BarChart3, RefreshCw, Layers
 } from 'lucide-react';
-
-const API = 'http://localhost:8000';
+import { API } from '../config/api';
 
 function AnimatedNumber({ value = 0 }) {
     const [display, setDisplay] = useState(0);

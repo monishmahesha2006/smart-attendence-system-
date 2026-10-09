@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Download, Search, RefreshCw, Filter, CheckCircle, XCircle, Edit3 } from 'lucide-react';
-
-const API = 'http://localhost:8000';
+import { API } from '../config/api';
 const cfg = () => ({ headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
 
 export default function AttendanceDashboard() {

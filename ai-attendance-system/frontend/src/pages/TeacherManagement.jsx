@@ -3,8 +3,7 @@ import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import { UserPlus, RefreshCw, Trash2, KeyRound, Copy, Check, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-
-const API = 'http://localhost:8000';
+import { API } from '../config/api';
 const cfg = () => ({ headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
 
 function CredentialCard({ cred, onClose }) {

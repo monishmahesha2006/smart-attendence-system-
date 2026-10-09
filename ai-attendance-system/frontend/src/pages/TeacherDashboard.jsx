@@ -5,8 +5,7 @@ import {
     BookOpen, Users, CalendarCheck, AlertTriangle,
     RefreshCw, CheckCircle, TrendingUp
 } from 'lucide-react';
-
-const API = 'http://localhost:8000';
+import { API } from '../config/api';
 const cfg = () => ({ headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
 
 export default function TeacherDashboard() {

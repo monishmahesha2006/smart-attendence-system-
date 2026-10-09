@@ -14,7 +14,20 @@ router = APIRouter(
     dependencies=[Depends(get_current_admin)]
 )
 
-UPLOAD_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "..", "ai-model", "dataset"))
+def _resolve_upload_dir():
+    if os.getenv("DATASET_DIR"):
+        return os.path.realpath(os.getenv("DATASET_DIR"))
+    for c in [
+        os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "..", "ai-model", "dataset")),
+        os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "ai-model", "dataset")),
+        os.path.realpath(os.path.join(os.getcwd(), "ai-model", "dataset")),
+        "/app/ai-model/dataset"
+    ]:
+        if os.path.exists(c):
+            return c
+    return os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "..", "ai-model", "dataset"))
+
+UPLOAD_DIR = _resolve_upload_dir()
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 @router.post("/", response_model=schemas.StudentResponse)

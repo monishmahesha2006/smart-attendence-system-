@@ -6,8 +6,7 @@ import {
     BookOpen, GraduationCap, Clock, ChevronRight,
     Building2, CalendarDays, Layers,
 } from 'lucide-react';
-
-const API = 'http://localhost:8000';
+import { API } from '../config/api';
 const cfg = () => ({ headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
 
 const DAY_MAP = { Mon: 0, Tue: 1, Wed: 2, Thu: 3, Fri: 4, Sat: 5 };

@@ -5,8 +5,7 @@ import {
     Users, CalendarCheck, AlertTriangle, TrendingUp,
     RefreshCw, Layers, ChevronDown, ChevronUp,
 } from 'lucide-react';
-
-const API = 'http://localhost:8000';
+import { API } from '../config/api';
 const cfg = () => ({ headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
 
 export default function DeptAdminDashboard() {

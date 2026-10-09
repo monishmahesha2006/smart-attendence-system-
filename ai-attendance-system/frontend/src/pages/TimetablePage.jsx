@@ -3,8 +3,7 @@ import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Trash2, RefreshCw, Clock, BookOpen, Layers } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-
-const API = 'http://localhost:8000';
+import { API } from '../config/api';
 const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const cfg = () => ({ headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
 

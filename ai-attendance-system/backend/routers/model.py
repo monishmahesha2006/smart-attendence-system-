@@ -16,10 +16,26 @@ router = APIRouter(
 )
 
                                                                                 
-_HERE        = os.path.dirname(os.path.abspath(__file__))
-DATASET_DIR  = os.path.realpath(os.path.join(_HERE, "..", "..", "ai-model", "dataset"))
-MODEL_PATH   = os.path.realpath(os.path.join(_HERE, "..", "..", "ai-model", "trainer.yml"))
-HAAR         = cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
+_HERE = os.path.dirname(os.path.abspath(__file__))
+
+def _resolve_model_path(rel_subpath):
+    env_name = "DATASET_DIR" if "dataset" in rel_subpath else "MODEL_PATH"
+    if os.getenv(env_name):
+        return os.path.realpath(os.getenv(env_name))
+    for c in [
+        os.path.realpath(os.path.join(_HERE, "..", "..", "ai-model", rel_subpath)),
+        os.path.realpath(os.path.join(_HERE, "..", "ai-model", rel_subpath)),
+        os.path.realpath(os.path.join(os.getcwd(), "ai-model", rel_subpath)),
+        os.path.realpath(os.path.join(os.getcwd(), "ai-attendance-system", "ai-model", rel_subpath)),
+        f"/app/ai-model/{rel_subpath}",
+    ]:
+        if os.path.exists(c):
+            return c
+    return os.path.realpath(os.path.join(_HERE, "..", "..", "ai-model", rel_subpath))
+
+DATASET_DIR = _resolve_model_path("dataset")
+MODEL_PATH  = _resolve_model_path("trainer.yml")
+HAAR        = cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
 
 os.makedirs(DATASET_DIR, exist_ok=True)
 os.makedirs(os.path.dirname(MODEL_PATH), exist_ok=True)

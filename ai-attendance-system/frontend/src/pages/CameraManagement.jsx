@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Plus, Trash2, Video, Edit3, CheckCircle, XCircle } from 'lucide-react';
-
-const API = 'http://localhost:8000';
+import { API } from '../config/api';
 
 export default function CameraManagement() {
     const [cameras, setCameras] = useState([]);
